@@ -11,7 +11,7 @@ let
         ${lib.escapeShellArg "${cfg.image}"} \
         "$out"
     '';
-    palette = lib.importJSON generatedJSON;
+    palette = lib.importJSON (if cfg.palette != null then cfg.palette else generatedJSON);
     scheme = base16.mkSchemeAttrs palette;
     json = scheme {
       template = ./palette.json.mustache;
@@ -29,6 +29,13 @@ in {
         A palette generator to use
 
         The palette generator takes the polarity, the image, and an output filename and generates a palette based on that.
+      '';
+    };
+    palette = lib.mkOption {
+      type = lib.types.nullOr lib.types.package;
+      default = null;
+      description = ''
+        Pregenerated palette
       '';
     };
     polarity = lib.mkOption {
