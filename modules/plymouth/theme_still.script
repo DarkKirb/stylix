@@ -8,6 +8,17 @@ baseline_y = Window.GetHeight() * 0.9;
 Window.SetBackgroundTopColor(%BASE00%);
 Window.SetBackgroundBottomColor(%BASE00%);
 
+bg.image = Image("bg.png");
+# Scale to fit
+bg.scale = Math.Max(Window.GetWidth() / bg.image.GetWidth(), Window.GetHeight() / bg.image.GetHeight());
+bg.scaled_image = bg.image.Scale (bg.image.GetWidth() * bg.scale, bg.image.GetHeight() * bg.scale);
+bg.sprite = Sprite(bg.scaled_image);
+bg.sprite.SetPosition(
+  center_x - (bg.scaled_image.GetWidth() / 2),
+  center_y - (bg.scaled_image.GetHeight() / 2),
+  0
+);
+
 
 ### LOGO ###
 

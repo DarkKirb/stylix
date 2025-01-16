@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   cfg = config.stylix.targets.plymouth;
@@ -17,20 +22,22 @@ let
       ${cfg.logo} \
       $themeDir/logo.png
 
-    ${
-      if cfg.logoAnimated
-      then "cp ${./theme.script} $themeDir/stylix.script"
-      else "cp ${./theme_still.script} $themeDir/stylix.script"
-    }
+    ${pkgs.imagemagick}/bin/convert \
+      ${config.stylix.image} \
+      $themeDir/bg.png
 
     ${
-      with config.lib.stylix.colors;
-      ''
-        substituteInPlace $themeDir/stylix.script \
-          --replace-fail "%BASE00%" "${base00-dec-r}, ${base00-dec-g}, ${base00-dec-b}" \
-          --replace-fail "%BASE05%" "${base05-dec-r}, ${base05-dec-g}, ${base05-dec-b}"
-      ''
+      if cfg.logoAnimated then
+        "cp ${./theme.script} $themeDir/stylix.script"
+      else
+        "cp ${./theme_still.script} $themeDir/stylix.script"
     }
+
+    ${with config.lib.stylix.colors; ''
+      substituteInPlace $themeDir/stylix.script \
+        --replace-fail "%BASE00%" "${base00-dec-r}, ${base00-dec-g}, ${base00-dec-b}" \
+        --replace-fail "%BASE05%" "${base05-dec-r}, ${base05-dec-g}, ${base05-dec-b}"
+    ''}
 
     echo "
     [Plymouth Theme]
@@ -43,7 +50,8 @@ let
     " > $themeDir/stylix.plymouth
   '';
 
-in {
+in
+{
   options.stylix.targets.plymouth = {
     enable = config.lib.stylix.mkEnableTarget "the Plymouth boot screen" true;
 
@@ -68,9 +76,7 @@ in {
   };
 
   imports = [
-    (
-      lib.mkRemovedOptionModule
-      [ "stylix" "targets" "plymouth" "blackBackground" ]
+    (lib.mkRemovedOptionModule [ "stylix" "targets" "plymouth" "blackBackground" ]
       "This was removed since it goes against the chosen color scheme. If you want this, consider disabling the target and configuring Plymouth by hand."
     )
   ];
