@@ -1,26 +1,34 @@
 { palette-generator, base16 }:
-{ pkgs, lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
 let
   cfg = config.stylix;
 
-  paletteJSON = let
-    generatedJSON = pkgs.runCommand "palette.json" { } ''
-      ${cfg.palette-generator}/bin/palette-generator \
-        "${cfg.polarity}" \
-        ${lib.escapeShellArg "${cfg.image}"} \
-        "$out"
-    '';
-    palette = lib.importJSON (if cfg.palette != null then cfg.palette else generatedJSON);
-    scheme = base16.mkSchemeAttrs palette;
-    json = scheme {
-      template = ./palette.json.mustache;
-      extension = ".json";
-    };
-  in json;
+  paletteJSON =
+    let
+      generatedJSON = pkgs.runCommand "palette.json" { } ''
+        ${cfg.palette-generator}/bin/palette-generator \
+          "${cfg.polarity}" \
+          ${lib.escapeShellArg "${cfg.image}"} \
+          "$out"
+      '';
+      palette = lib.importJSON (if cfg.palette != null then cfg.palette else generatedJSON);
+      scheme = base16.mkSchemeAttrs palette;
+      json = scheme {
+        template = ./palette.json.mustache;
+        extension = ".json";
+      };
+    in
+    json;
   generatedScheme = lib.importJSON paletteJSON;
 
-in {
+in
+{
   options.stylix = {
     palette-generator = lib.mkOption {
       type = lib.types.package;
@@ -39,7 +47,11 @@ in {
       '';
     };
     polarity = lib.mkOption {
-      type = lib.types.enum [ "either" "light" "dark" ];
+      type = lib.types.enum [
+        "either"
+        "light"
+        "dark"
+      ];
       default = "either";
       description = ''
         Use this option to force a light or dark theme.
@@ -61,13 +73,31 @@ in {
     };
 
     imageScalingMode = lib.mkOption {
-      type = lib.types.enum [ "stretch" "fill" "fit" "center" "tile" ];
+      type = lib.types.enum [
+        "stretch"
+        "fill"
+        "fit"
+        "center"
+        "tile"
+      ];
       default = "fill";
       description = ''
-        Wallpaper scaling mode;
+        Scaling mode for the wallpaper image.
 
-        This is the scaling mode your wallpaper image will use assuming it
-        doesnt fix your monitor perfectly
+        `stretch`
+        : Stretch the image to cover the screen.
+
+        `fill`
+        : Scale the image to fill the screen, potentially cropping it.
+
+        `fit`
+        : Scale the image to fit the screen without being cropped.
+
+        `center`
+        : Center the image without resizing it.
+
+        `tile`
+        : Tile the image to cover the screen.
       '';
     };
 
@@ -102,7 +132,13 @@ in {
 
         This can be a path to a file, a string of YAML, or an attribute set.
       '';
-      type = with lib.types; oneOf [ path lines attrs ];
+      type =
+        with lib.types;
+        oneOf [
+          path
+          lines
+          attrs
+        ];
       default = generatedScheme;
       defaultText = lib.literalMD ''
         The colors used in the theming.
@@ -121,7 +157,7 @@ in {
         to override.
       '';
       type = lib.types.attrs;
-      default = {};
+      default = { };
     };
   };
 

@@ -1,4 +1,9 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 
 let
   cfg = config.stylix.fonts;
@@ -17,7 +22,8 @@ let
     };
   };
 
-in {
+in
+{
   options.stylix.fonts = {
     serif = lib.mkOption {
       description = "Serif font.";
@@ -58,35 +64,35 @@ in {
     sizes = {
       desktop = lib.mkOption {
         description = ''
-          The font size used in window titles/bars/widgets elements of
+          The font size (in pt) used in window titles/bars/widgets elements of
           the desktop.
         '';
-        type = lib.types.ints.unsigned;
+        type = with lib.types; (either ints.unsigned float);
         default = 10;
       };
 
       applications = lib.mkOption {
         description = ''
-          The font size used by applications.
+          The font size (in pt) used by applications.
         '';
-        type = lib.types.ints.unsigned;
+        type = with lib.types; (either ints.unsigned float);
         default = 12;
       };
 
       terminal = lib.mkOption {
         description = ''
-          The font size for terminals/text editors.
+          The font size (in pt) for terminals/text editors.
         '';
-        type = lib.types.ints.unsigned;
+        type = with lib.types; (either ints.unsigned float);
         default = cfg.sizes.applications;
       };
 
       popups = lib.mkOption {
         description = ''
-          The font size for notifications/popups and in general overlay
+          The font size (in pt) for notifications/popups and in general overlay
           elements of the desktop.
         '';
-        type = lib.types.ints.unsigned;
+        type = with lib.types; (either ints.unsigned float);
         default = cfg.sizes.desktop;
       };
     };
