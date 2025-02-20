@@ -24,11 +24,7 @@
     };
 
     base16.url = "github:SenchoPens/base16.nix";
-
-    flake-compat = {
-      flake = false;
-      url = "github:edolstra/flake-compat";
-    };
+    flake-compat.url = "github:edolstra/flake-compat";
 
     flake-utils = {
       inputs.systems.follows = "systems";
@@ -98,6 +94,11 @@
       #
       # [1]: https://github.com/danth/stylix/issues/534
       url = "github:tinted-theming/tinted-kitty/eb39e141db14baef052893285df9f266df041ff8";
+    };
+
+    tinted-schemes = {
+      url = "github:tinted-theming/schemes";
+      flake = false;
     };
 
     firefox-gnome-theme = {
