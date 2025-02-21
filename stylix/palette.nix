@@ -177,7 +177,7 @@ in
         # The palette generator executable is not affected, and can still be
         # cleaned up as usual, so the overhead on system size is less than a
         # kilobyte.
-        source = cfg.generated.json;
+        source = if cfg.palette != null then cfg.palette else cfg.generated.json;
 
         # Only do this when `base16Scheme` is still the option default, which
         # is when the generated palette is used. Depending on the file in other
