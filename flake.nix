@@ -105,6 +105,11 @@
       flake = false;
       url = "github:rafaelmardojai/firefox-gnome-theme";
     };
+
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -211,11 +216,14 @@
         { pkgs, ... }@args:
         {
           imports = [
-            (import ./stylix/nixos inputs {
-              inherit (self.packages.${pkgs.system}) palette-generator;
-              base16 = base16.lib args;
-              homeManagerModule = self.homeManagerModules.stylix;
-            })
+            (import ./stylix/nixos inputs)
+            {
+              stylix = {
+                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
+                base16 = base16.lib args;
+                homeManagerIntegration.module = self.homeManagerModules.stylix;
+              };
+            }
           ];
         };
 
@@ -223,10 +231,13 @@
         { pkgs, ... }@args:
         {
           imports = [
-            (import ./stylix/hm inputs {
-              inherit (self.packages.${pkgs.system}) palette-generator;
-              base16 = base16.lib args;
-            })
+            (import ./stylix/hm inputs)
+            {
+              stylix = {
+                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
+                base16 = base16.lib args;
+              };
+            }
           ];
         };
 
@@ -234,11 +245,14 @@
         { pkgs, ... }@args:
         {
           imports = [
-            (import ./stylix/darwin inputs {
-              inherit (self.packages.${pkgs.system}) palette-generator;
-              base16 = base16.lib args;
-              homeManagerModule = self.homeManagerModules.stylix;
-            })
+            (import ./stylix/darwin inputs)
+            {
+              stylix = {
+                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
+                base16 = base16.lib args;
+                homeManagerIntegration.module = self.homeManagerModules.stylix;
+              };
+            }
           ];
         };
     };
