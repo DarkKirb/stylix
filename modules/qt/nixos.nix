@@ -27,39 +27,32 @@ in
     };
   };
 
-  config =
-    let
-      broken = config.services.desktopManager.plasma6.enable;
-      warning = {
-        warnings = [
-          "stylix: qt: Plasma6 is currently unsupported: https://github.com/nix-community/home-manager/issues/5098"
-        ];
-      };
-      default = lib.mkIf (config.stylix.enable && config.stylix.targets.qt.enable) {
-
-        stylix.targets.qt.platform =
-          with config.services.xserver.desktopManager;
-          if gnome.enable && !(plasma5.enable || lxqt.enable) then
-            "gnome"
-          else if plasma5.enable && !(gnome.enable || lxqt.enable) then
-            "kde"
-          else if lxqt.enable && !(gnome.enable || plasma5.enable) then
-            "lxqt"
-          else
-            "qtct";
-        qt = {
-          enable = true;
-          style = recommendedStyle."${config.qt.platformTheme}" or null;
-          platformTheme =
-            if config.stylix.targets.qt.platform == "qtct" then
-              "qt5ct"
-            else
-              config.stylix.targets.qt.platform;
-        };
-      };
-    in
-    lib.mkMerge [
-      (lib.mkIf broken warning)
-      (lib.mkIf (!broken) default)
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.qt.enable) {
+    assertions = [
+      {
+        assertion =
+          config.services.desktopManager.plasma6.enable -> (config.stylix.target.qt.platform == "kde6");
+        message = "Plasma6 only works with QT6 based themes, please set qt.platform to 'kde6', not ${config.stylix.target.qt.platform}";
+      }
     ];
+    stylix.targets.qt.platform =
+      with config.services.desktopManager;
+      if plasma6.enable then
+        "kde6"
+      else if gnome.enable && !(plasma5.enable || lxqt.enable) then
+        "gnome"
+      else if plasma5.enable && !(gnome.enable || lxqt.enable) then
+        "kde"
+      else if lxqt.enable && !(gnome.enable || plasma5.enable) then
+        "lxqt"
+      else
+        "qtct";
+    qt = {
+      enable = true;
+      style = recommendedStyle."${config.qt.platformTheme}" or null;
+      platformTheme =
+        if config.stylix.targets.qt.platform == "qtct" then "qt5ct" else config.stylix.targets.qt.platform;
+    };
+  };
+
 }
