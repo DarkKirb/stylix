@@ -31,7 +31,7 @@ in
     assertions = [
       {
         assertion =
-          config.services.desktopManager.plasma6.enable -> (config.stylix.target.qt.platform == "kde6");
+          config.services.desktopManager.plasma6.enable -> (config.stylix.targets.qt.platform == "kde6");
         message = "Plasma6 only works with QT6 based themes, please set qt.platform to 'kde6', not ${config.stylix.target.qt.platform}";
       }
     ];
