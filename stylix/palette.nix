@@ -14,7 +14,7 @@ in
   options.stylix = {
     palette-generator = lib.mkOption {
       type = lib.types.package;
-      default = palette-generator;
+      default = pkgs.palette-generator;
       description = ''
         A palette generator to use
 
