@@ -27,7 +27,7 @@
                 { };
         in
         {
-          programs.wpaperd.settings.any = {
+          services.wpaperd.settings.any = {
             path = "${config.stylix.image}";
           } // modeAttrs;
         }
