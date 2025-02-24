@@ -36,6 +36,7 @@ in
       }
     ];
     stylix.targets.qt.platform =
+      with config.xserver.services.desktopManager;
       with config.services.desktopManager;
       if plasma6.enable then
         "kde6"
