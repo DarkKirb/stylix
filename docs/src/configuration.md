@@ -16,53 +16,12 @@ To enable the Stylix module, declare:
 > examples which don't include it. No other settings will take effect unless
 > `stylix.enable` is set to `true`.
 
-## Wallpaper
-
-To start theming, you need to set a wallpaper image.
-
-```nix
-{
-  stylix.image = ./wallpaper.png;
-}
-```
-
-The option accepts derivations as well as paths, so you can fetch an image
-directly from the internet:
-
-```nix
-{
-  stylix.image = pkgs.fetchurl {
-    url = "https://www.pixelstalk.net/wp-content/uploads/2016/05/Epic-Anime-Awesome-Wallpapers.jpg";
-    sha256 = "enQo3wqhgf0FEPHj2coOCvo7DuZv+x5rL/WIo4qPI50=";
-  };
-}
-```
-
 ## Color scheme
-
-### Generated schemes
-
-If you only set a wallpaper, Stylix will use a
-[genetic algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm)
-to create a color scheme. The quality of these schemes can vary, but more
-colorful images tend to have better results.
-
-You can force a light or dark scheme using the polarity option:
-
-```nix
-{
-  stylix.polarity = "dark";
-}
-```
-
-The current scheme can be previewed in a web browser at either
-[`/etc/stylix/palette.html`](file:///etc/stylix/palette.html) for NixOS, or
-`~/.config/stylix/palette.html` for Home Manager.
 
 ### Handmade schemes
 
-If you prefer a handmade color scheme, you can choose anything from
-[the Tinted Theming repository](https://github.com/tinted-theming/schemes):
+To set a [Tinted Theming](https://github.com/tinted-theming/schemes) color
+scheme, declare:
 
 ```nix
 {
@@ -115,6 +74,46 @@ For more complex configurations you may find it simpler to use
 [mustache](http://mustache.github.io/) templates to generate output files.
 See [base16.nix](https://github.com/SenchoPens/base16.nix) documentation for
 usage examples.
+
+## Wallpaper
+
+To set a wallpaper, provide a path or an arbitrary derivation:
+
+- ```nix
+  {
+    stylix.image = ./wallpaper.png;
+  }
+  ```
+
+- ```nix
+  {
+    stylix.image = pkgs.fetchurl {
+      url = "https://www.pixelstalk.net/wp-content/uploads/2016/05/Epic-Anime-Awesome-Wallpapers.jpg";
+      sha256 = "enQo3wqhgf0FEPHj2coOCvo7DuZv+x5rL/WIo4qPI50=";
+    };
+  }
+  ```
+
+If `stylix.base16Scheme` is undeclared, Stylix generates a color scheme based on
+the wallpaper using a [genetic
+algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm). Note that more
+colorful images tend to yield better results. The algorithm's polarity can be
+schewed towards a dark or light theme with:
+
+- ```nix
+  {
+    stylix.polarity = "dark";
+  }
+  ```
+
+- ```nix
+  {
+    stylix.polarity = "light";
+  }
+  ```
+
+The generated color scheme can be viewed at `/etc/stylix/palette.html` on NixOS,
+or at `~/.config/stylix/palette.html` on Home Manager.
 
 ## Fonts
 
@@ -199,6 +198,35 @@ to customize this.
 >
 > Similarly, [`stylix.override`](options/global/nixos.md#stylixoverride) is not inherited
 > if the color scheme is different.
+
+## Standalone Nixvim
+
+When using a NixOS or home-manager installation of [Nixvim], you can use Stylix
+as normal. However, when using Nixvim's ["standalone" configuration mode][Nixvim Standalone],
+you will need to pass Stylix's generated config to Nixvim yourself.
+
+The generated config can be accessed as `config.lib.stylix.nixvim.config`. You
+can use this as a module in your standalone Nixvim Configuration or an
+extension of it.
+
+For example:
+
+```nix
+{ inputs, config, pkgs, ... }:
+let
+  inherit (pkgs.stdenv.hostPlatform) system;
+  nixvim-package = inputs.nixvim-config.packages.${system}.default;
+  extended-nixvim = nixvim-package.extend config.lib.stylix.nixvim.config;
+in
+{
+  environment.systemPackages = [
+    extended-nixvim
+  ];
+}
+```
+
+[Nixvim]: https://nix-community.github.io/nixvim
+[Nixvim Standalone]: https://nix-community.github.io/nixvim/user-guide/install.html#standalone-usage
 
 ## Turning targets on and off
 

@@ -113,11 +113,6 @@ let
           else if testbed == ".nix" then
             builtins.throw "testbed must have a name: ${testbed}"
 
-          # To prevent ambiguity with the final derivation's hyphen field
-          # separator, testbed names should not contain hyphens.
-          else if lib.hasInfix testbedFieldSeparator testbed then
-            builtins.throw "testbed name must not contain the '${testbedFieldSeparator}' testbed field separator: ${testbed}"
-
           else
             {
               inherit module;
@@ -132,12 +127,23 @@ let
   makeTestbed =
     testbed: stylix:
     let
-      name = builtins.concatStringsSep testbedFieldSeparator [
-        "testbed"
-        testbed.module
-        testbed.name
-        stylix.polarity
-      ];
+      name = builtins.concatStringsSep testbedFieldSeparator (
+        map
+          (
+            field:
+            lib.throwIf (lib.hasInfix testbedFieldSeparator field)
+              "testbed field must not contain the '${testbedFieldSeparator}' testbed field separator: ${field}"
+              field
+          )
+          [
+            "testbed"
+            testbed.module
+            testbed.name
+            stylix.polarity
+            "image${lib.optionalString (stylix.image or null == null) "less"}"
+            "scheme${lib.optionalString (stylix.base16Scheme or null == null) "less"}"
+          ]
+      );
 
       system = lib.nixosSystem {
         inherit (pkgs) system;
@@ -181,26 +187,43 @@ let
 
   # This generates a copy of each testbed for each of the following themes.
   makeTestbeds =
-    testbed:
-    map (makeTestbed testbed) [
-      {
-        enable = true;
-        image = pkgs.fetchurl {
+    let
+      images = {
+        dark = pkgs.fetchurl {
+          name = "mountains.jpg";
+          url = "https://unsplash.com/photos/ZqLeQDjY6fY/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzY1NDY4fA&force=true";
+          hash = "sha256-Dm/0nKiTFOzNtSiARnVg7zM0J1o+EuIdUQ3OAuasM58=";
+        };
+
+        light = pkgs.fetchurl {
           name = "three-bicycles.jpg";
           url = "https://unsplash.com/photos/hwLAI5lRhdM/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzYxNDcwfA&force=true";
           hash = "sha256-S0MumuBGJulUekoGI2oZfUa/50Jw0ZzkqDDu1nRkFUA=";
         };
+      };
+    in
+    testbed:
+    map (makeTestbed testbed) [
+      {
+        enable = true;
+        image = images.light;
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-latte.yaml";
         polarity = "light";
       }
       {
         enable = true;
-        image = pkgs.fetchurl {
-          name = "mountains.jpg";
-          url = "https://unsplash.com/photos/ZqLeQDjY6fY/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzY1NDY4fA&force=true";
-          hash = "sha256-Dm/0nKiTFOzNtSiARnVg7zM0J1o+EuIdUQ3OAuasM58=";
-        };
+        image = images.dark;
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
+        polarity = "dark";
+      }
+      {
+        enable = true;
+        base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
+        polarity = "dark";
+      }
+      {
+        enable = true;
+        image = images.dark;
         polarity = "dark";
       }
     ];
