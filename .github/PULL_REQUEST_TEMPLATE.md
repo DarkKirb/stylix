@@ -16,10 +16,11 @@ serve as information for reviewers.
 - [ ] Tested in [testbed](https://stylix.danth.me/testbeds.html)
 - [ ] Commit message follows [commit convention](https://stylix.danth.me/commit_convention.html)
 - [ ] Fits [style guide](https://stylix.danth.me/styling.html)
+- [ ] Respects license of any existing code used
 
-### Maintainer CC
+## Notify maintainers
 
 <!---
 If you are editing an existing target, consider pinging relevant
-`modules/<module>/meta.nix` module maintainers.
+module maintainers from `modules/<module>/meta.nix`.
 -->
