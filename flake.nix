@@ -25,7 +25,7 @@
       url = "github:tinted-theming/base16-vim/577fe8125d74ff456cf942c733a85d769afe58b7";
     };
 
-    base16.url = "github:SenchoPens/base16.nix";
+    base16.url = "github:awwpotato/base16.nix";
     flake-compat.url = "github:edolstra/flake-compat";
 
     flake-utils = {
@@ -226,7 +226,8 @@
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
+                paletteGenerator =
+                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };
@@ -242,7 +243,8 @@
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
+                paletteGenerator =
+                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
               };
             }
@@ -257,7 +259,8 @@
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
+                paletteGenerator =
+                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };
@@ -272,7 +275,8 @@
             (import ./stylix/droid inputs)
             {
               stylix = {
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
+                paletteGenerator =
+                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };

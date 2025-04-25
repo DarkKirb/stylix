@@ -46,7 +46,8 @@ let
       g = colors."${color}-rgb-g";
       b = colors."${color}-rgb-b";
     };
-  nur = config.stylix.inputs.nur.legacyPackages.${pkgs.system};
+  nur =
+    config.stylix.inputs.nur.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in
 {
   options.stylix.targets = lib.listToAttrs (
@@ -92,7 +93,7 @@ in
               let
                 template = config.lib.stylix.colors {
                   template = ./userChrome.css.mustache;
-                  extension = "css";
+                  extension = ".css";
                 };
               in
               ''
