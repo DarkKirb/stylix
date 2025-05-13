@@ -12,15 +12,6 @@ let
 in
 {
   options.stylix = {
-    palette-generator = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.palette-generator;
-      description = ''
-        A palette generator to use
-
-        The palette generator takes the polarity, the image, and an output filename and generates a palette based on that.
-      '';
-    };
     palette = lib.mkOption {
       type = lib.types.nullOr lib.types.package;
       default = null;
@@ -95,7 +86,7 @@ in
         # the output of the palette generator will not be protected from
         # garbage collection.
         default = pkgs.runCommand "palette.json" { } ''
-          ${lib.getExe' cfg.palette-generator "palette-generator"}/bin/palette-generator \
+          ${lib.getExe cfg.paletteGenerator} \
             "${cfg.polarity}" \
             ${lib.escapeShellArg "${cfg.image}"} \
             "$out"
