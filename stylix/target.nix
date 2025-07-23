@@ -1,5 +1,4 @@
 { config, lib, ... }:
-
 {
   options.stylix = {
     enable = lib.mkOption {
@@ -91,7 +90,7 @@
           };
         in
         self.mkEnableIf {
-          description = "Whether to enable theming for ${name}";
+          description = "Whether to enable theming for ${name}.";
           default = cfg.autoEnable && autoEnable;
           defaultText =
             if args ? autoEnableExpr then

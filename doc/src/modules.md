@@ -157,7 +157,7 @@ You can use the values directly:
 }
 ```
 
-Or you can create a [Mustache](http://mustache.github.io/) template and use
+Or you can create a [Mustache](http://mustache.github.io) template and use
 it as a function. This returns a derivation which builds the template.
 
 ```nix
@@ -244,6 +244,13 @@ number of maintainers:
 
 The main responsibility of module maintainers is to update and fix their
 modules.
+
+> [!NOTE]
+> If this is the first time you're adding yourself as a maintainer in Stylix,
+> the `/generated/all-maintainers.nix` file will need to be updated by running
++> `nix run .#all-maintainers`
++> ([pre-commit](./development_environment.md#pre-commit) will also automatically
++> regenerate it).
 
 ## Documentation
 

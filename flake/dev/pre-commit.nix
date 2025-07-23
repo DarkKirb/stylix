@@ -11,20 +11,30 @@
         check.enable = true;
 
         settings.hooks = {
+          # keep-sorted start block=yes
+          all-maintainers = {
+            enable = true;
+            entry = config.apps.all-maintainers.program;
+            files = "^(${
+              builtins.concatStringsSep "|" [
+                ''flake\.lock''
+                ''generated\/all-maintainers.nix''
+                ''modules\/.*\/meta\.nix''
+                ''stylix\/maintainers\.nix''
+              ]
+            })$";
+          };
           deadnix = {
             enable = true;
-            settings.noUnderscore = true;
+            settings.noLambdaPatternNames = true;
           };
-
           editorconfig-checker.enable = true;
           hlint.enable = true;
-
+          statix.enable = true;
           treefmt = {
             enable = true;
             package = config.formatter;
           };
-
-          statix.enable = true;
           typos = {
             enable = true;
             settings.configuration = ''
@@ -33,6 +43,7 @@
             '';
           };
           yamllint.enable = true;
+          # keep-sorted end
         };
       };
     };
