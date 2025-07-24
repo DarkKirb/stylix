@@ -2,6 +2,7 @@
   mkTarget,
   pkgs,
   lib,
+  config,
   ...
 }:
 mkTarget {
