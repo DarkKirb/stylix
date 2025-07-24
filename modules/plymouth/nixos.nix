@@ -2,7 +2,6 @@
   mkTarget,
   pkgs,
   lib,
-  config,
   ...
 }:
 mkTarget {
@@ -37,7 +36,11 @@ mkTarget {
   ];
 
   configElements =
-    { cfg, colors }:
+    {
+      cfg,
+      colors,
+      image,
+    }:
     let
       themeScript = import ./theme-script.nix { inherit lib cfg colors; };
 
@@ -57,7 +60,7 @@ mkTarget {
 
            
         ${pkgs.imagemagick}/bin/convert \
-          ${config.stylix.image} \
+          ${image} \
           $themeDir/bg.png
 
         cp ${themeScript} $themeDir/stylix.script
