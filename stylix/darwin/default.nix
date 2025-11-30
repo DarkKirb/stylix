@@ -9,6 +9,7 @@ in
 {
   imports = [
     ./palette.nix
+    ../colors.nix
     ../fonts.nix
     ../home-manager-integration.nix
     ../opacity.nix
@@ -18,7 +19,8 @@ in
     ../release.nix
     ../overlays.nix
     ../ordering.nix
-  ] ++ autoload;
+  ]
+  ++ autoload;
   config.warnings =
     lib.mkIf
       (

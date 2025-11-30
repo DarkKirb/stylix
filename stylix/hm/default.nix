@@ -11,6 +11,7 @@ in
     ./cursor.nix
     ./icons.nix
     ./palette.nix
+    ../colors.nix
     ../cursor.nix
     ../fonts.nix
     ../icons.nix
@@ -21,7 +22,8 @@ in
     ../release.nix
     ../overlays.nix
     ../ordering.nix
-  ] ++ autoload;
+  ]
+  ++ autoload;
   config.warnings =
     lib.mkIf
       (

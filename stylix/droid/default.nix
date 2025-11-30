@@ -6,6 +6,7 @@ in
   imports = [
     ./fonts.nix
     ./palette.nix
+    ../colors.nix
     ../fonts.nix
     ../home-manager-integration.nix
     ../opacity.nix
@@ -14,7 +15,8 @@ in
     ../target.nix
     ../overlays.nix
     ../ordering.nix
-  ] ++ autoload;
+  ]
+  ++ autoload;
 
   # See https://github.com/nix-community/nix-on-droid/issues/436
   options.lib = lib.mkOption {
